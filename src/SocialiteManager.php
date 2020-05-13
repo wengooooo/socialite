@@ -61,6 +61,7 @@ class SocialiteManager implements FactoryInterface
         'douyin' => 'DouYin',
         'taobao' => 'Taobao',
         'feishu' => 'FeiShu',
+        'thebase' => 'TheBase',
     ];
 
     /**
