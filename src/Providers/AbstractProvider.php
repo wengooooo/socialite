@@ -255,7 +255,7 @@ abstract class AbstractProvider implements ProviderInterface
      *
      * @return \Overtrue\Socialite\AccessTokenInterface
      */
-    public function getAccessToken($code)
+    public function getAccessToken($value, $grant = 'code')
     {
         if ($this->accessToken) {
             return $this->accessToken;
@@ -263,14 +263,28 @@ abstract class AbstractProvider implements ProviderInterface
 
         $postKey = (1 === version_compare(ClientInterface::VERSION, '6')) ? 'form_params' : 'body';
 
+        $postValue = null;
+        switch ($grant) {
+            case 'refresh_token':
+                $postValue = $this->getRefreshTokenFields($value);
+                break;
+            default:
+                $postValue = $this->getTokenFields($value);
+                break;
+        }
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
             'debug' => true,
             'headers' => ['Accept' => 'application/json'],
-            $postKey => $this->getTokenFields($code),
+            $postKey => $postValue,
         ]);
 
         return $this->parseAccessToken($response->getBody());
     }
+
+
+
+
+
 
     /**
      * Set the scopes of the requested access.
@@ -428,6 +442,16 @@ abstract class AbstractProvider implements ProviderInterface
             'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
             'code' => $code,
+            'redirect_uri' => $this->redirectUrl,
+        ];
+    }
+
+    protected function getRefreshTokenFields($refreshToken) {
+        return [
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refreshToken,
             'redirect_uri' => $this->redirectUrl,
         ];
     }
