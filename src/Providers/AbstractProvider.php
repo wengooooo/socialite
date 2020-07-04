@@ -273,7 +273,7 @@ abstract class AbstractProvider implements ProviderInterface
                 break;
         }
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            'debug' => true,
+            'debug' => false,
             'headers' => ['Accept' => 'application/json'],
             $postKey => $postValue,
         ]);

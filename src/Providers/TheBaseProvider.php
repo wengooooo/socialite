@@ -209,7 +209,7 @@ class TheBaseProvider extends AbstractProvider implements ProviderInterface
 
         $authUrl = $this->getAuthUrl($state);
 
-        $response = $this->getHttpClient()->get($authUrl, ['debug' => true, 'cookies' => $this->jar]);
+        $response = $this->getHttpClient()->get($authUrl, ['debug' => false, 'cookies' => $this->jar]);
 
         $params = array();
 
@@ -234,7 +234,7 @@ class TheBaseProvider extends AbstractProvider implements ProviderInterface
     public function loginAndGetCode($data) {
 
         $response = $this->getHttpClient()->post($this->getLoginUrl(), [
-            'debug' => true,
+            'debug' => false,
             'allow_redirects' => false,
             'cookies' => $this->jar,
             'form_params' => array_merge($data, $this->getLoginData())
